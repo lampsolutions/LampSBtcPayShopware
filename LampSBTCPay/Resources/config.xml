@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/config.xsd">
+    <elements>
+        <element required="true" type="text" scope="locale">
+            <name>api_token</name>
+            <label lang="de">BTCPayserver Api Token</label>
+            <label lang="en">BTCPayserver Api Token</label>
+            <value>Create it under Settings</value>
+            <description lang="de">Ihren Api Schlüssel finden Sie im Backend Bereich von CryptoPanel.</description>
+            <description lang="en">You will find your Api Key in the CryptoPanel Backend Area.</description>
+        </element>
+        <element required="true" type="text" scope="locale">
+            <name>api_url</name>
+            <label lang="de">Payment Gateway URL</label>
+            <label lang="en">Payment Gateway URL</label>
+            <value></value>
+            <description lang="de">Ihre Gateway URL finden Sie im Backend Bereich von CryptoPanel.</description>
+            <description lang="en">You will find your Gateway URL in the CryptoPanel Backend Area.</description>
+        </element>
+        <element type="boolean" scope="locale">
+            <name>transmit_customer_data</name>
+            <label lang="de">Kundendaten übertragen. Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</label>
+            <label lang="en">Transmit customer data</label>
+            <value></value>
+            <description lang="de">Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</description>
+            <description lang="en">Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</description>
+        </element>
+        <element required="true" type="combo">
+            <name>selected_currencies</name>
+            <label lang="de">Ausgewählte Krypto-Währungen.</label>
+            <label lang="en">Selected crypto currencies</label>
+            <description lang="de">Ausgewählte Krypto-Währungen.</description>
+            <description lang="en">Selected crypto currencies.</description>
+            <store>
+                <option>
+                    <value>LBTC</value>
+                    <label>LBTC</label>
+                </option>
+            </store>
+            <options>
+                <multiSelect>true</multiSelect>
+            </options>
+        </element>
+        <element required="true" type="text" scope="locale">
+            <name>SECRET</name>
+            <label lang="de">Secret</label>
+            <label lang="en">Secret</label>
+            <value></value>
+            <description lang="de">Ihr geheimes Passwort. Bei Änderungen muss das Pairing mit dem BtcPayserver neu initialisiert werden</description>
+            <description lang="en">Your secret password. If changes are made, the pairing with the BtcPayserver must be reinitialized.</description>
+        </element>
+    </elements>
+</config>
