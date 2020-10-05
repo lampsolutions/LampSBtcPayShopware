@@ -10,4 +10,28 @@
     <author>LAMP solutions GmbH</author>
 
     <compatibility minVersion="5.2.13"/>
+
+    <description>
+        <![CDATA[
+      <h1>Cookie Panel</h1>
+        <div class="wrap" style="display: flex;">
+            <div class="card">
+            <p>Das Plugin BTCpay Payment Gateway for Shopware allows you to use BTC-Payserver, https://btcpayserver.org/ or alternatively des Bitpay-Services</p>
+                    </div>
+        </div>
+
+       ]]>
+    </description>
+    <description lang="de">
+        <![CDATA[
+      <h1>Cookie Panel</h1>
+        <div class="wrap" style="display: flex;">
+            <div class="card">
+            <p>Das Plugin BTCpay Payment Gateway für Shopware erlaubt die Benutzung BTC-Payserver, https://btcpayserver.org/ oder alternativ des Bitpay-Services</p>
+                    </div>
+        </div>
+
+       ]]>
+    </description>
+
 </plugin>
