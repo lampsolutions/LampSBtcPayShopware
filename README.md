@@ -18,8 +18,13 @@ The Plugin is tested with Shopware 5.5 und Shopware 5.6
 
 ## Sponsors
 
+### Primary Sponsor
+
 [![SATOSHIGOODS](sponsors/lampsolutions.png)](https://www.lamp-solutions.de/)
-<br/><br/><br/><br/>
+<br/><br/>
+
+### Other Sponsors
+<br/><br/>
 [![SATOSHIGOODS](sponsors/shopinbit.png)](https://shopinbit.de/)
 <br/><br/><br/><br/>
 [![SATOSHIGOODS](sponsors/satoshigoods.png)](https://satoshigoods.de/)
