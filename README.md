@@ -2,9 +2,9 @@
 
 ## Brief Description
 
-LampSBtcPayShopware is an Shopware 5 plugin which helps you to accept crypto currencies like Bitcoin and Bitcoin Lightning on your Shopware Shop.
+LampSBtcPayShopware is an Shopware 5 plugin which helps you to accept crypto currencies like Bitcoin or Bitcoin Lightning on your Shopware Shop.
 
-The following services are supported as an payment gateway by the plugin:
+The following services are supported as a payment gateway by the plugin:
 
 * [BTCPayServer](https://btcpayserver.org/) selfhosted service
 * [BitPay](https://bitpay.com/) service by BitPay Inc.
