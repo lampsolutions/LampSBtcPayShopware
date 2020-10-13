@@ -19,7 +19,7 @@ The Plugin is tested with Shopware 5.5 und Shopware 5.6
 
 ## License
 
-`SPDX-License-Identifier: MIT`
+The contents of the LampSBTCPay folder is released unter the [MIT License](./LampSBTCPay/LICENSE).
 
 ## Sponsors
 
