@@ -9,7 +9,7 @@ The following services are supported as a payment gateway by the plugin:
 * [BTCPayServer](https://btcpayserver.org/) selfhosted service
 * [BitPay](https://bitpay.com/) service by BitPay Inc.
 
-This enables you to accept payments from all common crypto currencies, such as Lightning, Dash, Etherum, Bitcoin, Bitcoin Cash.
+This enables you to accept payments from all common crypto currencies, such as Bitcoin, Bitcoin Lightning, Dash, Etherum, Bitcoin Cash, ...
 
 ## Building
 
