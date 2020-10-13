@@ -1,21 +1,41 @@
 # LampSBtcPayShopware
 
-## Requirements
+## Brief Description
 
-This plugin requires the following:
+LampSBtcPayShopware is an Shopware 5 plugin which helps you to accept crypto currencies like Bitcoin on your Shopware Shop.
 
-* [Shopware](https://www.shopware.com/).
-* A BTC-Payserver https://btcpayserver.org/
+The following services are supported as an payment gateway by the plugin:
 
-or
+* [BTCPayServer](https://btcpayserver.org/) selfhosted service
+* [BitPay](https://bitpay.com/) service by BitPay Inc.
+
+## Building
+
+To create an installable plugin zip file for the Shopware 5 Backend, you have to do the following steps.
+
+### Install dependencies via composer
+
+```
+composer --working-dir=./LampSBTCPay/ install --no-dev
+```
+
+### Creating a zip archive
+
+```
+zip -r LampSBTCPay.zip LampSBTCPay
+```
 
 ## Compatibility
 
-* The Plugin speaks bitpay protocol API, so you can also get a a BitPay merchant account ([Test](http://test.bitpay.com) and [Production](http://www.bitpay.com))
+The plugin uses the [bitpay json protocol](https://bitpay.com/docs/payment-protocol), so every service which implements the protocol can be used.
 
-## Support and Shopware-Compatibility
+* [BTCPayServer](https://btcpayserver.org/) selfhosted service
+* [BitPay](https://bitpay.com/) service by BitPay Inc.
 
-The Plugin is tested with Shopware 5.5 und Shopware 5.6
+
+## Shopware compatibility
+
+The plugin is tested with Shopware 5.5 und Shopware 5.6
 
 ## License
 
