@@ -50,5 +50,41 @@
             <description lang="de">Ihr geheimes Passwort. Bei Änderungen muss das Pairing mit dem BtcPayserver neu initialisiert werden</description>
             <description lang="en">Your secret password. If changes are made, the pairing with the BtcPayserver must be reinitialized.</description>
         </element>
+        <element type="button">
+            <name>buttonTest</name>
+            <label lang="de">Test Button</label>
+            <label lang="en">Test Button</label>
+            <options>
+                <handler>
+                    <![CDATA[
+                    function() {
+                    	console.log(this);
+                    	element=document.getElementById(this.id);
+
+                         var data = [];
+                        var table = element.closest( 'table' );
+                        var input = table.getElementsByTagName( 'input' );
+                        for ( var z = 0; z < input.length; z++ ) {
+                            data.push( input[z].id );
+                        }
+
+                      Ext.Ajax.request({
+                        url: 'BTCPayPairing/test?apiToken='+ document.getElementById(data[0]).value + '&apiUrl=' + encodeURI(document.getElementById(data[1]).value),
+                        success: function (response) {
+                          Shopware.Msg.createGrowlMessage(response.statusText, response.responseText)
+                        },
+                        failure: function (response) {
+                          if (response.status === 404) {
+                            Shopware.Msg.createGrowlMessage('Plugin Manager', 'Please activate plugin before testing api.');
+                          } else {
+                            Shopware.Msg.createGrowlMessage(response.statusText, response.responseText)
+                          }
+                        }
+                      });
+                    }
+                    ]]>
+                </handler>
+            </options>
+        </element>
     </elements>
 </config>

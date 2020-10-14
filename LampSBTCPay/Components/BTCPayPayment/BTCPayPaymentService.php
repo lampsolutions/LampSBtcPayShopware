@@ -14,6 +14,25 @@ class BTCPayPaymentService
     static $file_priv="media/unknown/bitpay.pri";
     static $file_public="media/unknown/bitpay.pub";
 
+    private $overrideUrl=false;
+    private $overrideToken=false;
+
+    /**
+     * @param $overrideUrl
+     */
+    public function setOverrideUrl($overrideUrl)
+    {
+        $this->overrideUrl = $overrideUrl;
+    }
+
+    /**
+     * @param $overrideToken
+     */
+    public function setOverrideToken($overrideToken)
+    {
+        $this->overrideToken = $overrideToken;
+    }
+
     /**
      * @param $request \Enlight_Controller_Request_Request
      * @return PaymentResponse
@@ -46,6 +65,7 @@ class BTCPayPaymentService
     {
         unset($payment_data["return_url"]);
         unset($payment_data["callback_url"]);
+        unset($payment_data["transaction_id"]);
 
         return sha1(implode('|', $payment_data));
     }
@@ -54,11 +74,17 @@ class BTCPayPaymentService
         require __DIR__.'/../../vendor/autoload.php';
 
         $api_url = Shopware()->Config()->getByNamespace('LampSBTCPay', 'api_url');
+        if($this->overrideUrl){
+            $api_url=$this->overrideUrl;
+        }
 
-        if(empty($api_url)) throw new \Exception('[LampsCryptoGate] Missing Api URL');
+        if(empty($api_url)) throw new \Exception('[LampSBTCPay] Missing Api URL');
 
         $api_key = Shopware()->Config()->getByNamespace('LampSBTCPay', 'api_token');
-        if(empty($api_key)) throw new \Exception('[LampsCryptoGate] Missing Api Token');
+        if($this->overrideToken){
+            $api_key=$this->overrideToken;
+        }
+        if(empty($api_key)) throw new \Exception('[LampSBTCPay] Missing Api Token');
 
 
         $storageEngine = new \Bitpay\Storage\ShopwareEncryptedFilesystemStorage(Shopware()->Config()->getByNamespace('LampSBTCPay', 'SECRET'));

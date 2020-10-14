@@ -22,6 +22,7 @@ class Client extends \Bitpay\Client\Client{
         $this->response = $this->sendRequest($this->request);
         $body = json_decode($this->response->getBody(), true);
 
+
         if (isset($body['error'])) {
             throw new \Exception($body['error']);
         }

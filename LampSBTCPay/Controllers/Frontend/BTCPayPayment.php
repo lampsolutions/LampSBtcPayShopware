@@ -2,7 +2,7 @@
 use Shopware\Components\CSRFWhitelistAware;
 
 use LampSBTCPay\Components\BTCPayPayment\PaymentResponse;
-use LampSBTCPay\Components\CryptoGatePayment\BTCPayserverPaymentService;
+use LampSBTCPay\Components\LampSBTCPay\BTCPayserverPaymentService;
 
 
 class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_Frontend_Payment implements CSRFWhitelistAware
@@ -75,9 +75,14 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
 
         $version = Shopware()->Config()->get( 'Version' );
         if($version < '5.6') {
+            $connection = $this->container->get('dbal_connection');
+            $user = $this->getUser();
             $basket=$this->getBasket();
+            $sql = 'SELECT max(id) as max FROM s_order WHERE userID='.(int)$user["billingaddress"]["customer"]["id"];
+            $data = $connection->fetchAll($sql, [':active' => true]);
+
             $this->saveOrder(
-                sha1($this->sessionToInteger($basket["content"][0]["sessionID"])),
+                sha1($data[0]["max"].$this->sessionToInteger($basket["content"][0]["sessionID"])),
                 $service->createPaymentToken($this->getPaymentData())
             );
         }
@@ -93,13 +98,31 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
 
         /** @var PaymentResponse $response */
         $response = $service->createPaymentResponse($this->Request());
+        $token = $service->createPaymentToken($this->getPaymentData());
+
+
+
+        if (!$service->isValidToken($response, $token)) {
+            $this->forward('cancel');
+            return;
+        }
+
+
+        if (!$service->validatePayment($response)) {
+            $this->forward('cancel');
+            return;
+        }
+
+
 
         $invoice = $client->getInvoiceByOrderId($response->token);
         $invoiceStatus = $invoice->getStatus();
 
 
+
         switch ($invoiceStatus) {
             case 'confirmed':
+            case 'complete':
             case 'paid':
                 $this->saveOrder(
                     $response->transactionId,
@@ -123,28 +146,40 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
     public function callbackAction()
     {
 
-        require __DIR__.'/../../vendor/autoload.php';
-
-        $raw_post_data = file_get_contents('php://input');
-
-        $ipn = json_decode($raw_post_data);
-
         /** @var BTCPayserverPaymentService\ $service */
         $service = $this->container->get('btc_pay.btc_pay_payment_service');
+        /** @var \LampSBTCPay\Components\BTCPayPayment\Client $client */
         $client=$service->getClient();
 
+        /** @var PaymentResponse $response */
+        $response = $service->createPaymentResponse($this->Request());
 
-        $invoice = $client->getInvoice($ipn->id);
-        $invoiceId = $invoice->getId();
+        $invoice = $client->getInvoiceByOrderId($response->token);
         $invoiceStatus = $invoice->getStatus();
-        $orderId=$invoice->getOrderId();
+
+        $token = $service->createPaymentToken($this->getPaymentData());
+
+        Shopware()->PluginLogger()->info("token:".$token." _ response:".$response->token);
+
+
+        if (!$service->isValidToken($response, $token)) {
+            $this->forward('cancel');
+            return;
+        }
+
+        if (!$service->validatePayment($response)) {
+            $this->forward('cancel');
+            return;
+        }
 
 
         switch ($invoiceStatus) {
+            case 'confirmed':
+            case 'complete':
             case 'paid':
-                $this->saveOrderFromCallBack(
-                    "invoice?.$invoiceId",
-                    $service->createPaymentToken($orderId),
+                $this->saveOrder(
+                    $response->transactionId,
+                    $response->token,
                     self::PAYMENTSTATUSPAID
                 );
                 $this->redirect(['controller' => 'checkout', 'action' => 'finish']);
@@ -181,10 +216,20 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
             'action' => 'return',
             'forceSecure' => true,
         ];
+        $callbackParameters = [
+            'action' => 'callback',
+            'forceSecure' => true,
+        ];
         if($version >= '5.6') {
             $shopware_token = $this->get('shopware\components\cart\paymenttokenservice')->generate();
             $returnParameters[\Shopware\Components\Cart\PaymentTokenService::TYPE_PAYMENT_TOKEN]=$shopware_token;
+            $callbackParameters[\Shopware\Components\Cart\PaymentTokenService::TYPE_PAYMENT_TOKEN] = $shopware_token;
         }
+
+        $connection = $this->container->get('dbal_connection');
+        $sql = 'SELECT max(id) as max FROM s_order WHERE userID='.(int)$user["billingaddress"]["customer"]["id"];
+        $data = $connection->fetchAll($sql, [':active' => true]);
+
 
 
         $parameter = [
@@ -193,9 +238,9 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
             'first_name' => $billing['firstname'],
             'last_name' => $billing['lastname'],
             'email' => @$user['additional']['user']['email'],
-            'transaction_id' => sha1($this->sessionToInteger($basket["content"][0]["sessionID"])),
+            'transaction_id' => sha1($data[0]["max"].$this->sessionToInteger($basket["content"][0]["sessionID"])),
             'return_url' => $router->assemble($returnParameters),
-            'callback_url' => $router->assemble(['action' => 'callback', 'forceSecure' => true]),
+            'callback_url' => $router->assemble($callbackParameters),
             'cancel_url' => $router->assemble(['action' => 'cancel', 'forceSecure' => true]),
             'seller_name' => Shopware()->Config()->get('company'),
             'memo' => 'Ihr Einkauf bei '.$_SERVER['SERVER_NAME'],
@@ -236,44 +281,8 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
 
     public function getWhitelistedCSRFActions() {
         return [
-            'return',
+            'return','callback','cancel',
         ];
-    }
-
-    public function saveOrderFromCallBack($transactionId, $paymentUniqueId,$paymentStatusId = null)
-    {
-
-
-
-
-
-        if (empty($orderNumber)) {
-           // $user = $this->getUser();
-          //  $basket = $this->getBasket();
-
-            $order = Shopware()->Modules()->Order();
-            $order->sUserData = $user;
-            $order->sComment = "";
-            $order->sBasketData = $basket;
-            $order->sAmount = $basket['sAmount'];
-            $order->sAmountWithTax = !empty($basket['AmountWithTaxNumeric']) ? $basket['AmountWithTaxNumeric'] : $basket['AmountNumeric'];
-            $order->sAmountNet = $basket['AmountNetNumeric'];
-            $order->sShippingcosts = $basket['sShippingcosts'];
-            $order->sShippingcostsNumeric = $basket['sShippingcostsWithTax'];
-            $order->sShippingcostsNumericNet = $basket['sShippingcostsNet'];
-            $order->bookingId = $transactionId;
-            $order->dispatchId = Shopware()->Session()->sDispatch;
-            $order->sNet = empty($user['additional']['charge_vat']);
-            $order->uniqueID = $paymentUniqueId;
-            $order->deviceType = $this->Request()->getDeviceType();
-            $orderNumber = $order->sSaveOrder();
-        }
-
-        if (!empty($orderNumber) && !empty($paymentStatusId)) {
-            $this->savePaymentStatus($transactionId, $paymentUniqueId, $paymentStatusId, false);
-        }
-
-        return $orderNumber;
     }
 
 

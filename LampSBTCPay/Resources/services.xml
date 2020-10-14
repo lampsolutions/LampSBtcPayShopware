@@ -6,5 +6,14 @@
         <service id="btc_pay.btc_pay_payment_service"
                  class="LampSBTCPay\Components\BTCPayPayment\BTCPayPaymentService">
         </service>
+        <service id="btc_pay.crypto_gate_payment_service_test" class="LampSBTCPay\Controllers\Backend\Shopware_Controllers_Backend_BTCPayPaymentTest">
+            <argument type="service" id="http_client"/>
+            <tag name="shopware.controller" module="backend" controller="BTCPayPaymentTest"/>
+        </service>
+        <service id="btc_pay.subscriber.cache_registration" class="LampSBTCPay\Subscriber\CacheSubscriber">
+            <argument>%lamp_s_b_t_c_pay.plugin_dir%</argument>
+            <argument type="service" id="shopware.cache_manager"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
     </services>
 </container>
