@@ -72,6 +72,23 @@ class Shopware_Controllers_Frontend_BTCPayPayment extends Shopware_Controllers_F
         $service = $this->container->get('btc_pay.btc_pay_payment_service');
         $paymentUrl = $this->getPaymentUrl();
 
+        if(empty($paymentUrl) || filter_var($paymentUrl, FILTER_VALIDATE_URL)===false){
+            $errorKey = 'CouldNotConnectToCryptoGate';
+            $baseUrl = $this->Front()->Router()->assemble([
+                'controller' => 'checkout',
+                'action' => 'cart'
+            ]);
+
+
+
+            return $this->redirect(sprintf(
+                '%s?%s=1',
+                $baseUrl,
+                $errorKey
+            ));
+
+        }
+
 
         $version = Shopware()->Config()->get( 'Version' );
         if($version < '5.6') {

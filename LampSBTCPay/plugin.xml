@@ -7,10 +7,15 @@
 
     <version>1.1.0</version>
     <copyright>LAMP solutions GmbH</copyright>
+    <license>MIT</license>
     <author>LAMP solutions GmbH</author>
 
-    <compatibility minVersion="5.2.13"/>
+    <compatibility minVersion="5.5.0"/>
 
+    <changelog version="1.1.0">
+        <changes lang="de">Erstveröffentlichung</changes>
+        <changes lang="en">First release</changes>
+    </changelog>
     <description>
         <![CDATA[
       <h1>Cookie Panel</h1>

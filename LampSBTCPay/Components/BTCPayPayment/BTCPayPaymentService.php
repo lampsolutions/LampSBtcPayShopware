@@ -78,14 +78,18 @@ class BTCPayPaymentService
             $api_url=$this->overrideUrl;
         }
 
-        if(empty($api_url)) throw new \Exception('[LampSBTCPay] Missing Api URL');
-
+        if(empty($api_url)){
+            Shopware()->PluginLogger()->error("BTCPay-Payment-Error: Missing API Url");
+            return false;
+        }
         $api_key = Shopware()->Config()->getByNamespace('LampSBTCPay', 'api_token');
         if($this->overrideToken){
             $api_key=$this->overrideToken;
         }
-        if(empty($api_key)) throw new \Exception('[LampSBTCPay] Missing Api Token');
-
+        if(empty($api_key)){
+            Shopware()->PluginLogger()->error("BTCPay-Payment-Error: Missing API Kay");
+            return false;
+        }
 
         $storageEngine = new \Bitpay\Storage\ShopwareEncryptedFilesystemStorage(Shopware()->Config()->getByNamespace('LampSBTCPay', 'SECRET'));
         $privateKey    = $storageEngine->load(self::$file_priv);
@@ -97,9 +101,10 @@ class BTCPayPaymentService
         $client->setUri($api_url);
 
         $token = new \Bitpay\Token();
-        $token->setToken($api_key); // UPDATE THIS VALUE
+        $token->setToken($api_key);
 
-        $client->setToken($token); // UPDATE THIS VALUE
+
+        $client->setToken($token);
 
         $token->setFacade('merchant');
 
@@ -109,8 +114,13 @@ class BTCPayPaymentService
 
     public function createPaymentUrl($parameters=array(),$version) {
 
-
-        $client=$this->getClient();
+        try{
+            $client=$this->getClient();
+        }
+        catch (\Exception $e){
+            Shopware()->PluginLogger()->warn("BTCPay-Payment-Error:".$e->getMessage());
+            return null;
+        }
 
         $invoice = new \Bitpay\Invoice();
 
@@ -151,7 +161,12 @@ class BTCPayPaymentService
             ->setRedirectUrl($parameters["return_url"]."?token=".
                 $this->createPaymentToken($parameters)."&transactionId=".
                 $parameters["transaction_id"]);
-        $client->createInvoice($invoice);
+        try{
+            $client->createInvoice($invoice);
+        }
+        catch (\Exception $e){
+            Shopware()->PluginLogger()->warn("BTCPay-Payment-Error:".$e->getMessage());
+        }
 
 
         return $invoice->getUrl();

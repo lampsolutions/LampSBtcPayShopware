@@ -11,7 +11,8 @@
          </label>
          <div class="col-sm-10">
             <input type="hidden" name="pair_now" value="pair_now">
-            <input type="text" class="form-control" id="windowTitle" name="ParingCode" required placeholder="Your paring code...">
+            <input type="text" class="form-control" id="windowTitle" name="ParingCode" required placeholder="{s name="pair_placeholder"
+            namespace="backend/b_t_c_pay_payment_check"}Your paring code...{/s}">
          </div>
       </div>
 
@@ -19,23 +20,32 @@
 
       <div class="form-group">
          <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">Pair now</button>
+            <button type="submit" class="btn btn-primary">
+               {s name="pair_now" namespace="backend/b_t_c_pay_payment_check"}Pair now{/s}
+            </button>
          </div>
       </div>
    </form>
    {if $token}
-      <h2>Congratulations your Token is {$token} </h2>
+      <h2>
+         {s name="congrats" namespace="backend/b_t_c_pay_payment_check"}Congratulations your Token is{/s}
+          {$token} </h2>
    {/if}
    {if $error}
-      <h2>Oh no, error has happend</h2>
+      <h2>{s name="paring_error" namespace="backend/b_t_c_pay_payment_check"}An error has happend{/s}
+         </h2>
       <pre>
          {$error}
       </pre>
-      <pre>
-         {$request}
-      </pre>
-      <pre>
-         {$response}
-      </pre>
+      {if $request}
+         <pre>
+            {$request}
+         </pre>
+      {/if}
+      {if $response}
+         <pre>
+            {$response}
+         </pre>
+      {/if}
    {/if}
 {/block}

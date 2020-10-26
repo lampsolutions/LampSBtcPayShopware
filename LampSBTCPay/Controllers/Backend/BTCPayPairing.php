@@ -109,10 +109,8 @@ class Shopware_Controllers_Backend_BTCPayPairing extends \Shopware_Controllers_B
 
 
         if(false===$paymentUrl || filter_var($paymentUrl, FILTER_VALIDATE_URL)===false){
-            $result['response']='Oh no! Something went wrong :(';
-            if($service->getLastError()){
-                $result['response']=$service->getLastError()->getMessage();
-            }
+            header("HTTP/1.0 200 Not Okay");
+            $result = "Could not generate Payment-URL please see logfile for possible Exceptions";
         }
         else {
 
