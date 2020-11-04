@@ -72,10 +72,6 @@ class Shopware_Controllers_Backend_BTCPayPairing extends \Shopware_Controllers_B
                 );
                 $this->View()->assign(['token' => $token]);
 
-                $shop          = Shopware()->Models()->getRepository('Shopware\Models\Shop\Shop')->findOneBy(array('default' => true));
-                $pluginManager = Shopware()->Container()->get('shopware_plugininstaller.plugin_manager');
-                $plugin        = $pluginManager->getPluginByName('LampSBTCPay');
-                $pluginManager->saveConfigElement($plugin, 'api_token', $token->getToken(), $shop);
 
             } catch (\Exception $e) {
 
@@ -83,10 +79,10 @@ class Shopware_Controllers_Backend_BTCPayPairing extends \Shopware_Controllers_B
                 $request  = $client->getRequest();
                 $response = $client->getResponse();
 
-                $this->View()->assign(['error' => $e->getMessage()]);
+                $this->View()->assign(['error' => "Paring not successfull. See Plugin log for more Information"]);
+                Shopware()->PluginLogger()->error("BTCPay-Payment-Error: ".$e->getMessage());
 
-                $this->View()->assign(['request' => $request]);
-                $this->View()->assign(['request' => $response]);
+
 
             }
 
@@ -110,7 +106,7 @@ class Shopware_Controllers_Backend_BTCPayPairing extends \Shopware_Controllers_B
 
         if(false===$paymentUrl || filter_var($paymentUrl, FILTER_VALIDATE_URL)===false){
             header("HTTP/1.0 200 Not Okay");
-            $result = "Could not generate Payment-URL please see logfile for possible Exceptions";
+            $result = "Could not generate Payment-URL. Maybe you need to <a href='#' onclick=\"Shopware.ModuleManager.createSimplifiedModule('BTCPayPairing', { 'title': 'BTCPay Pairing' }); return false;\">pair</a> your server first. Please see logfile for possible Exceptions";
         }
         else {
 
@@ -121,12 +117,13 @@ class Shopware_Controllers_Backend_BTCPayPairing extends \Shopware_Controllers_B
 
 
             $result['response']='Success!';
+            echo json_encode($result);
+            die();
+
         }
 
-        echo json_encode($result);
+        echo $result;
         die();
-
-
     }
 
     /**

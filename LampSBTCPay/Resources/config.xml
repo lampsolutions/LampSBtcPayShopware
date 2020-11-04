@@ -3,14 +3,6 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/config.xsd">
     <elements>
         <element required="true" type="text" scope="locale">
-            <name>api_token</name>
-            <label lang="de">BTCPayserver Api Token</label>
-            <label lang="en">BTCPayserver Api Token</label>
-            <value>Create it under Settings</value>
-            <description lang="de">Ihren Api Schlüssel finden Sie im Backend Bereich von CryptoPanel.</description>
-            <description lang="en">You will find your Api Key in the CryptoPanel Backend Area.</description>
-        </element>
-        <element required="true" type="text" scope="locale">
             <name>api_url</name>
             <label lang="de">Payment Gateway URL</label>
             <label lang="en">Payment Gateway URL</label>
@@ -69,7 +61,7 @@
                         }
 
                       Ext.Ajax.request({
-                        url: 'BTCPayPairing/test?apiToken='+ document.getElementById(data[0]).value + '&apiUrl=' + encodeURI(document.getElementById(data[1]).value),
+                        url: 'BTCPayPairing/test?apiToken='+ document.getElementById(data[0]).value + '&apiUrl=' + encodeURI(document.getElementById(data[0]).value),
                         success: function (response) {
                           Shopware.Msg.createGrowlMessage(response.statusText, response.responseText)
                         },

@@ -82,14 +82,7 @@ class BTCPayPaymentService
             Shopware()->PluginLogger()->error("BTCPay-Payment-Error: Missing API Url");
             return false;
         }
-        $api_key = Shopware()->Config()->getByNamespace('LampSBTCPay', 'api_token');
-        if($this->overrideToken){
-            $api_key=$this->overrideToken;
-        }
-        if(empty($api_key)){
-            Shopware()->PluginLogger()->error("BTCPay-Payment-Error: Missing API Kay");
-            return false;
-        }
+
 
         $storageEngine = new \Bitpay\Storage\ShopwareEncryptedFilesystemStorage(Shopware()->Config()->getByNamespace('LampSBTCPay', 'SECRET'));
         $privateKey    = $storageEngine->load(self::$file_priv);
@@ -101,10 +94,11 @@ class BTCPayPaymentService
         $client->setUri($api_url);
 
         $token = new \Bitpay\Token();
-        $token->setToken($api_key);
+        $token->setToken("");
 
 
         $client->setToken($token);
+
 
         $token->setFacade('merchant');
 
