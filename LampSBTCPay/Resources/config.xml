@@ -4,19 +4,19 @@
     <elements>
         <element required="true" type="text" scope="locale">
             <name>api_url</name>
-            <label lang="de">Payment Gateway URL</label>
-            <label lang="en">Payment Gateway URL</label>
+            <label lang="de">BTCPay Server URL</label>
+            <label lang="en">BTCPay Server URL</label>
             <value></value>
-            <description lang="de">Ihre Gateway URL finden Sie im Backend Bereich von CryptoPanel.</description>
-            <description lang="en">You will find your Gateway URL in the CryptoPanel Backend Area.</description>
+            <description lang="de">Deine BTCPay Server URL auf welchen der Shop zugreift.</description>
+            <description lang="en">Your BTCPay Server URL which your shop connects to.</description>
         </element>
         <element type="boolean" scope="locale">
             <name>transmit_customer_data</name>
-            <label lang="de">Kundendaten übertragen. Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</label>
+            <label lang="de">Kundendaten übertragen</label>
             <label lang="en">Transmit customer data</label>
             <value></value>
-            <description lang="de">Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</description>
-            <description lang="en">Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (=AVV) von Deinem Dienstleister.</description>
+            <description lang="de">Benötigt unter Umständen einen Auftragsdatenverarbeitungsvertrag (AVV) von Deinem Dienstleister.</description>
+            <description lang="en">May require an Data Processing Agreement (DPA) with your service provider.</description>
         </element>
         <element required="true" type="combo">
             <name>selected_currencies</name>
@@ -36,21 +36,24 @@
         </element>
         <element required="true" type="text" scope="locale">
             <name>SECRET</name>
-            <label lang="de">Secret</label>
+            <label lang="de">Verschlüsselungspasswort</label>
             <label lang="en">Secret</label>
             <value></value>
-            <description lang="de">Ihr geheimes Passwort. Bei Änderungen muss das Pairing mit dem BtcPayserver neu initialisiert werden</description>
-            <description lang="en">Your secret password. If changes are made, the pairing with the BtcPayserver must be reinitialized.</description>
+            <description lang="de">Ihr automatisch generierter Schlüssel. Wird benutzt zur Verschlüsselung von Konfigurationsdaten</description>
+            <description lang="en">Your automatically generated secret. It is used to crypt your config files.</description>
+            <options>
+                <readOnly>true</readOnly>
+            </options>
         </element>
         <element type="button">
             <name>buttonTest</name>
-            <label lang="de">Test Button</label>
-            <label lang="en">Test Button</label>
+            <label lang="de">Einstellungen prüfen</label>
+            <label lang="en">Validate settings</label>
             <options>
                 <handler>
                     <![CDATA[
                     function() {
-                    	console.log(this);
+
                     	element=document.getElementById(this.id);
 
                          var data = [];
@@ -59,14 +62,28 @@
                         for ( var z = 0; z < input.length; z++ ) {
                             data.push( input[z].id );
                         }
+                        console.log("yo");
+                      document.getElementById(data[3]).style.display = "none";
+
+                      if(typeof document.getElementById(data[0]).value != "string" || document.getElementById(data[0]).value.length == 0) {
+                        Shopware.Msg.createGrowlMessage('Plugin Manager', 'The field BTC Pay Server URL must be filled out,');
+                        return;
+                      }
+
+                      if(typeof document.getElementById(data[3]).value != "string" || document.getElementById(data[3]).value.length == 0) {
+                        Shopware.Msg.createGrowlMessage('Plugin Manager', 'The field Secret must be filled out,');
+                        return;
+                      }
 
                       Ext.Ajax.request({
-                        url: 'BTCPayPairing/test?apiToken='+ document.getElementById(data[0]).value + '&apiUrl=' + encodeURI(document.getElementById(data[0]).value),
+                        url: 'BTCPayPairing/test?apiToken='+ document.getElementById(data[3]).value + '&apiUrl=' + encodeURI(document.getElementById(data[0]).value),
                         success: function (response) {
                           Shopware.Msg.createGrowlMessage(response.statusText, response.responseText)
                         },
                         failure: function (response) {
-                          if (response.status === 404) {
+                          if (response.status === 500) {
+                            Shopware.Msg.createGrowlMessage('Plugin Manager', 'Please validate your credentials.');
+                          } else if (response.status === 404) {
                             Shopware.Msg.createGrowlMessage('Plugin Manager', 'Please activate plugin before testing api.');
                           } else {
                             Shopware.Msg.createGrowlMessage(response.statusText, response.responseText)

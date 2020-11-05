@@ -7,6 +7,7 @@
 
     <version>1.1.0</version>
     <copyright>LAMP solutions GmbH</copyright>
+    <link>https://www.lamp-solutions.de</link>
     <license>MIT</license>
     <author>LAMP solutions GmbH</author>
 
@@ -18,22 +19,70 @@
     </changelog>
     <description>
         <![CDATA[
-      <h1>Cookie Panel</h1>
+        <h1>BTCPay Payment</h1>
         <div class="wrap">
             <div class="card">
-            <p>Das Plugin BTCpay Payment Gateway for Shopware allows you to use BTC-Payserver, https://btcpayserver.org/ or alternatively des Bitpay-Services</p>
-                    </div>
+                The plugin BTCpay Payment Gateway for Shopware allows you to use BTCPay Server, https://btcpayserver.org/ or alternatively Bitpay-Services.
+            </div>
+        </div>
+        <br>
+        <h2>Requirements</h2>
+        <div class="wrap">
+            <div class="card">
+                <ol>
+                    <li>Configured store on an BTCPay Server or a Bitpay account</li>
+                    <li>PHP Extensions GMP and BCMATH</li>
+                </ol>
+            </div>
+        </div>
+        <br>
+        <h2>Quickstart BTCPay Server</h2>
+        <div class="wrap">
+            <div class="card">
+                <ol>
+                    <li>Fill in the setting BTCPay Server URL into the plugins settings section in the shopware backend</li>
+                    <li>Login to the backend of the BTCPay Server</li>
+                    <li>Choose the menu entry Stores, selct the configured store and click on Settings</li>
+                    <li>Choose the sub menu entry Access Tokens and create a new Access Token</li>
+                    <li>After creating a new access token the "initiated pairing code" should be shown</li>
+                    <li>Fill in the pairing code inside the Shopware Backend under Settings > BTCPay Pairing and click on do pairing now.</li>
+                </ol>
+            </div>
         </div>
 
        ]]>
     </description>
     <description lang="de">
         <![CDATA[
-      <h1>Cookie Panel</h1>
+      <h1>BTCPay Payment</h1>
         <div class="wrap">
             <div class="card">
-            <p>Das Plugin BTCpay Payment Gateway für Shopware erlaubt die Benutzung BTC-Payserver, https://btcpayserver.org/ oder alternativ des Bitpay-Services</p>
-                    </div>
+                Das Plugin BTCpay Payment Gateway für Shopware erlaubt die Benutzung des BTCPay Server, https://btcpayserver.org/ oder alternativ des Bitpay-Services.
+            </div>
+        </div>
+        <br>
+        <h2>Voraussetzungen</h2>
+        <div class="wrap">
+            <div class="card">
+                <ol>
+                    <li>Konfigurierter Store auf einem BTCPay Server oder Bitpay Konto</li>
+                    <li>PHP Erweiterungen GMP und BCMATH</li>
+                </ol>
+            </div>
+        </div>
+        <br>
+        <h2>Schnellstart BTCPay Server</h2>
+        <div class="wrap">
+            <div class="card">
+                <ol>
+                    <li>Tragen Sie die BTCPay Server URL in den Einstellungen des Plugins im Shopware Backend ein</li>
+                    <li>Loggen Sie sich auf Ihrem BTCPay Server ein</li>
+                    <li>Wählen Sie unter dem Menupunkt Stores Ihren eingerichteten Store aus und klicken auf Settings</li>
+                    <li>Klicken Sie nun auf den Menu Punkt Access Tokens und legen Sie ein neues Access token an</li>
+                    <li>Der "initiated pairing code" sollte ihnen nun angezeigt werden</li>
+                    <li>Tragen Sie den Pairing Code im Shopware Backend unter Einstellungen > BTCPay Pairing ein und führen Sie das Pairing durch.</li>
+                </ol>
+            </div>
         </div>
 
        ]]>
