@@ -54,16 +54,13 @@
                     <![CDATA[
                     function() {
 
-                    	element=document.getElementById(this.id);
-
-                         var data = [];
-                        var table = element.closest( 'table' );
-                        var input = table.getElementsByTagName( 'input' );
-                        for ( var z = 0; z < input.length; z++ ) {
-                            data.push( input[z].id );
-                        }
-                        console.log("yo");
-                      document.getElementById(data[3]).style.display = "none";
+                      element=document.getElementById(this.id);
+                      var data = [];
+                      var table = element.closest( 'table' );
+                      var input = table.getElementsByTagName( 'input' );
+                      for ( var z = 0; z < input.length; z++ ) {
+                        data.push( input[z].id );
+                      }
 
                       if(typeof document.getElementById(data[0]).value != "string" || document.getElementById(data[0]).value.length == 0) {
                         Shopware.Msg.createGrowlMessage('Plugin Manager', 'The field BTC Pay Server URL must be filled out,');
